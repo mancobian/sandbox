@@ -1,0 +1,13 @@
+void main(float4 position : POSITION,
+        float2 uv : TEXCOORD0,
+        float4 color    : COLOR,
+        out float4 oPosition : POSITION,
+        out float2 oUv : TEXCOORD0,
+        out float4 oColor    : COLOR,
+        uniform float scale,							  
+        uniform float4x4 worldViewProj) 
+{
+        oPosition = mul(worldViewProj, position);
+        oUv = uv * scale;
+        oColor = color;
+}

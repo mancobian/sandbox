@@ -1,0 +1,145 @@
+///////////////////////////////////////////////////////////////////////////////
+// GENERAL DECLARATIONS
+///////////////////////////////////////////////////////////////////////////////
+
+material tsdc/material/null
+{
+    technique tsdc/technique/null
+    {
+        scheme tsdc/scheme/null
+        pass
+        {
+            colour_write off
+        }
+    }
+}
+
+material tsdc/material/early_z
+{
+    technique tsdc/technique/early_z
+    {
+        scheme tsdc/scheme/early_z
+        pass
+        {
+            cull_hardware none
+            cull_software none
+            depth_check off
+            depth_func always_fail
+            depth_write off
+            colour_write off
+        }
+    }
+}
+
+material tsdc/material/white
+{
+    technique tsdc/technique/white
+    {
+        pass
+        {
+            diffuse 1.0 0.0 0.0 1.0
+            emissive 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 20.0
+            ambient 1.0 1.0 1.0 1.0 
+            lighting off
+            cull_hardware none
+            cull_software none
+            depth_check on
+            depth_func less_equal
+            depth_write on
+        }
+    }
+}
+
+material tsdc/material/debug
+{
+    technique tsdc/technique/debug
+    {
+        scheme tsdc/scheme/debug
+        
+        pass
+        {
+            diffuse 1.0 1.0 1.0 1.0
+            emissive 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 20.0
+            ambient 1.0 1.0 1.0 1.0 
+            lighting off
+            cull_hardware clockwise
+            cull_software back
+            depth_check on
+            depth_func less_equal
+            depth_write off
+            //polygon_mode wireframe
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// PASSTHRU
+///////////////////////////////////////////////////////////////////////////////
+
+vertex_program tsdc/program/passthru_vp cg
+{
+	source deferred_lighting-output.cg
+	entry_point passthru_vs
+	profiles vs_2_0 arbvp1
+
+    default_params
+    {
+        param_named_auto wvp worldviewproj_matrix
+    }
+}
+
+fragment_program tsdc/program/passthru_fp cg
+{
+	source deferred_lighting-output.cg
+	entry_point passthru_fs
+	profiles ps_2_0 arbfp1
+
+    default_params
+    {
+    }
+}
+
+material tsdc/material/passthru
+{
+    technique
+    {
+        pass tsdc/pass/output
+        {
+            lighting off
+            depth_check off
+            depth_write off
+			scene_blend add
+
+			vertex_program_ref tsdc/program/passthru_vp 
+	        {
+	        }
+			
+			fragment_program_ref tsdc/program/passthru_fp 
+	        {
+	        }
+
+            texture_unit tex_diffuse
+            {
+            }
+            
+            texture_unit tex_nd
+            {
+            }
+            
+            texture_unit tex_vpos
+            {
+            }
+            
+            texture_unit tex_unused
+            {
+            }
+
+			texture_unit tex_lights
+            {
+            }
+        }
+    }
+}
+

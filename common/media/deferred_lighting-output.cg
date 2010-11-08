@@ -1,0 +1,58 @@
+///////////////////////////////////////////////////////////////////////////////
+// INCLUDE
+///////////////////////////////////////////////////////////////////////////////
+
+#include "core.cg"
+
+///////////////////////////////////////////////////////////////////////////////
+// PASSTHRU
+///////////////////////////////////////////////////////////////////////////////
+
+struct passthru_vin 
+{
+	float4 pos : POSITION;
+    float4 normal : NORMAL;
+    float2 uv0 : TEXCOORD0;
+};
+
+struct passthru_vout
+{
+	float4 pos : POSITION;
+    float2 uv0 : TEXCOORD0;
+    float3 vpos : TEXCOORD1;
+};
+
+passthru_vout passthru_vs
+(
+	passthru_vin IN
+    , uniform float4x4 wvp
+)
+{
+	passthru_vout OUT;
+    OUT.pos = mul(wvp, IN.pos);
+    OUT.uv0 = IN.uv0;
+	return OUT;
+};
+
+struct passthru_fin 
+{
+	float2 uv0 : TEXCOORD0;
+    float3 vpos : TEXCOORD1;
+};
+
+fout1 passthru_fs
+(
+    passthru_fin IN
+    , uniform sampler2D tex_diffuse : register(s0)
+    , uniform sampler2D tex_nd : register(s1)
+    , uniform sampler2D tex_vpos : register(s2)
+    , uniform sampler2D tex_unused : register(s3)
+    , uniform sampler2D tex_lights : register(s4)
+)
+{
+    fout1 OUT;
+    OUT.color0 = tex2D(tex_diffuse, IN.uv0);
+	OUT.color0 *= tex2D(tex_lights, IN.uv0);
+    OUT.color0.a = 1.0;
+    return OUT;
+}

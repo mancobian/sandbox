@@ -1,0 +1,136 @@
+
+material Test/walls.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias walls
+				texture test_grid.jpg
+			}
+		}
+
+	}
+
+}
+
+material Test/bug_3.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			vertex_program_ref vertexTextureBlendVS
+			{
+				param_named scale float 1
+				param_named_auto worldViewProj worldviewproj_matrix
+			}
+
+			fragment_program_ref vertexTextureBlend
+			{
+				param_named scale_tex1 float 1
+				param_named scale_tex2 float 1
+				param_named scale_tex3 float 1
+			}
+
+			texture_unit
+			{
+				texture_alias red
+				texture test_bug_red.tga
+			}
+
+			texture_unit
+			{
+				texture_alias green
+				texture test_bug_silver.tga
+			}
+
+			texture_unit
+			{
+				texture_alias blue
+				texture test_bug_yellow.tga
+			}
+		}
+
+	}
+
+}
+
+material Test/bug_reflection.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias red
+				texture test_bug_silver.tga
+			}
+
+			texture_unit
+			{
+				texture_alias green
+				texture test_reflection.jpg
+				env_map spherical
+			}
+		}
+
+	}
+
+}
+
+material Test/bug_glass.metal_c
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture_alias diffuse
+				texture test_bug_silver.tga
+			}
+
+			texture_unit
+			{
+				texture_alias alpha
+				texture test_bug_silver.tga
+				colour_op_ex blend_texture_alpha src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				alpha_op_ex modulate_x4 src_texture src_current
+				env_map spherical
+			}
+
+			texture_unit
+			{
+				texture_alias reflection
+				texture test_reflection.jpg
+				colour_op_ex blend_current_alpha src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				alpha_op_ex modulate_x4 src_texture src_current
+				env_map spherical
+			}
+		}
+
+	}
+
+}

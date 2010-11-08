@@ -1,0 +1,58 @@
+///////////////////////////////////////////////////////////////////////////////
+// G-BUFFER
+///////////////////////////////////////////////////////////////////////////////
+
+vertex_program tsdc/program/gbuffer_vp cg
+{
+	source deferred_lighting-gbuffer.cg
+	entry_point gbuffer_vs
+	profiles vs_2_0 arbvp1
+
+    default_params
+    {
+        param_named_auto wv worldview_matrix
+        param_named_auto wvp worldviewproj_matrix
+        param_named_auto ncd near_clip_distance
+        param_named_auto fcd far_clip_distance
+    }
+}
+
+fragment_program tsdc/program/gbuffer_fp cg
+{
+	source deferred_lighting-gbuffer.cg
+	entry_point gbuffer_fs
+	profiles ps_2_0 arbfp1
+
+    default_params
+    {
+    }
+}
+
+// NOTE: This material is only used as a template
+// to be copied into other materials that don't
+// possess a g-buffer scheme! Pass properties are
+// set in source code!
+//
+material tsdc/material/gbuffer
+{
+	technique 
+	{
+        scheme tsdc/scheme/gbuffer
+		pass tsdc/pass/gbuffer
+		{
+            lighting off
+            cull_software back
+            depth_check on
+            depth_write off
+
+			vertex_program_ref tsdc/program/gbuffer_vp 
+            {
+            }
+			
+			fragment_program_ref tsdc/program/gbuffer_fp 
+            {
+            }
+        }
+    }
+}
+

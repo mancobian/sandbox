@@ -1,0 +1,54 @@
+struct PS_INPUT_STRUCT
+{
+   float3 vertexColor: COLOR;
+   float2 texCoords:   TEXCOORD0;
+};
+
+struct PS_OUTPUT_STRUCT
+{
+   float4 color0:       COLOR0;
+};
+
+//**---------------------------------------------------------
+//** Function:    main
+//** Description: Declare the main entry point for the shader
+//** Input:       PS_INPUT_STRUCT, derived from the output of
+//**              the associated vertex shader
+//** Returns:     PS_OUTPUT_STRUCT
+//**---------------------------------------------------------
+PS_OUTPUT_STRUCT main( PS_INPUT_STRUCT psInStruct,
+		      uniform float scale_tex1,
+		      uniform float scale_tex2,
+		      uniform float scale_tex3,
+		      uniform sampler terrain_map : register(s0),
+		      uniform sampler rock_map : register(s1),
+		      uniform sampler grass_map : register(s2))
+{
+   PS_OUTPUT_STRUCT psOutStruct; //** Declare the output struct
+
+   //**------------------------------------------------------
+   //** Sample each texture unit based on the vertex color
+   //** Blend (add) texture layers
+   //**------------------------------------------------------
+
+	psOutStruct.color0 = float4(0, 0, 0, 0);
+
+	if(psInStruct.vertexColor.x) {
+		float4 terrainBase = tex2D( terrain_map, psInStruct.texCoords * scale_tex1) * psInStruct.vertexColor.x;
+		psOutStruct.color0 += terrainBase;
+	}
+
+	if(psInStruct.vertexColor.y) {
+		float4 rock = tex2D( rock_map, psInStruct.texCoords * scale_tex2) * psInStruct.vertexColor.y;
+		psOutStruct.color0 += rock;
+	}
+	
+	if(psInStruct.vertexColor.z) {
+		float4 grass = tex2D( grass_map, psInStruct.texCoords * scale_tex3) * psInStruct.vertexColor.z;
+		psOutStruct.color0 += grass;
+	}
+
+
+   return psOutStruct;
+
+}

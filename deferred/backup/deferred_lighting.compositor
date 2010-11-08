@@ -1,0 +1,112 @@
+compositor tsdc/compositor/test
+{
+    technique
+    {
+        texture mrt0 target_width target_height PF_FLOAT16_RGBA PF_FLOAT16_RGBA PF_FLOAT16_RGBA PF_FLOAT16_RGBA 
+        texture rt_light target_width target_height PF_FLOAT16_RGBA 
+		//texture mrt0 target_width target_height PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8
+		//texture rt_light target_width target_height PF_A8R8G8B8
+		
+        target mrt0
+        {
+            input none
+            
+            pass clear
+            {
+            }
+
+            // Render scene geometry
+            // NOTE: Excludes light(s) bounding geometry
+            material_scheme tsdc/scheme/gbuffer
+            pass render_scene
+            {
+                first_render_queue 50
+                last_render_queue 100
+            }
+        }
+
+        target_output
+        {
+            input none
+
+            pass clear
+            {
+            }
+
+            pass render_quad
+            {
+                material tsdc/material/passthru
+                input 0 mrt0 0
+                input 1 rt_light
+            }
+        }
+    }
+}
+
+compositor tsdc/compositor/test_with_lights
+{
+    technique
+    {
+        texture mrt0 target_width target_height PF_FLOAT16_RGBA PF_FLOAT16_RGBA PF_FLOAT16_RGBA PF_FLOAT16_RGBA 
+        texture rt_light target_width target_height PF_FLOAT16_RGBA 
+		//texture mrt0 target_width target_height PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8
+		//texture rt_light target_width target_height PF_A8R8G8B8
+		
+        target mrt0
+        {
+            input none
+            
+            pass clear
+            {
+            }
+
+            // Render scene geometry
+            // NOTE: Excludes light(s) bounding geometry
+            material_scheme tsdc/scheme/gbuffer
+            pass render_scene
+            {
+                first_render_queue 50
+                last_render_queue 100
+            }
+        }
+
+        target rt_light
+        {
+            input none
+
+            pass clear
+            {
+                clear
+                {
+                    buffers colour
+                    colour_value 0 0 0 0 
+                }
+            }
+
+            // Render point light(s) bounding geometry
+            pass render_scene
+            {
+                first_render_queue 20
+                last_render_queue 20
+            }
+        }
+
+        target_output
+        {
+            input none
+
+            pass clear
+            {
+            }
+
+            pass render_quad
+            {
+                material tsdc/material/passthru
+                input 0 mrt0 0
+                input 0 mrt0 1
+                input 0 mrt0 2
+                input 0 mrt0 3
+            }
+        }
+    }
+}

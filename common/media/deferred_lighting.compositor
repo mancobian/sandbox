@@ -1,0 +1,67 @@
+compositor tsdc/compositor/deferred_lighting
+{
+    technique
+    {
+        // texture mrt0 target_width target_height PF_FLOAT16_RGBA PF_FLOAT16_RGBA PF_FLOAT16_RGBA PF_FLOAT16_RGBA
+        texture rt_gbuffer target_width target_height PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8 
+    	texture rt_lights target_width target_height PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8 PF_A8R8G8B8 
+		
+        target rt_gbuffer
+        {
+            input none
+            
+            pass clear
+            {
+            }
+
+            // Render scene geometry
+            // NOTE: Excludes light(s) bounding geometry
+            material_scheme tsdc/scheme/gbuffer
+            pass render_scene
+            {
+                first_render_queue 50
+                last_render_queue 100
+            }
+        }
+        
+        target rt_lights
+        {
+            input none
+
+            pass clear
+            {
+                clear
+                {
+                    buffers colour
+                    colour_value 0 0 0 0 
+                }
+            }
+
+            // Render point light(s) bounding geometry
+            pass render_scene
+            {
+                first_render_queue 20
+                last_render_queue 20
+            }
+        }
+        
+        target_output
+        {
+            input none
+
+            pass clear
+            {
+            }
+
+            pass render_quad
+            {
+                material tsdc/material/passthru
+				input 0 rt_gbuffer 0
+				input 1 rt_gbuffer 1
+				input 2 rt_gbuffer 2
+				input 3 rt_gbuffer 3
+                input 4 rt_lights
+            }
+        }
+    }
+}

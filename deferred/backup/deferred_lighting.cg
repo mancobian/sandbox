@@ -1,0 +1,457 @@
+///////////////////////////////////////////////////////////////////////////////
+// GENERAL DECLARATIONS
+///////////////////////////////////////////////////////////////////////////////
+
+struct vin
+{
+    float4 pos : POSITION;
+    float3 normal : NORMAL;
+    float2 uv0 : TEXCOORD0;
+};
+
+struct fout1
+{
+	float4 color0 : COLOR0;
+};
+
+struct fout2
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+};
+
+struct fout3
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+	float4 color2 : COLOR2;
+};
+
+struct fout4
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+	float4 color2 : COLOR2;
+	float4 color3 : COLOR3;
+};
+
+float gbuffer_to_vpos_depth(float depth, float4 clip)
+{
+    return depth * clip.y;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// G-BUFFER
+///////////////////////////////////////////////////////////////////////////////
+
+struct gbuffer_vout
+{
+	float4 pos : POSITION;
+    float2 uv0 : TEXCOORD0;
+    float4 normal : TEXCOORD1;
+    float depth : TEXCOORD2;
+    float3 vpos : TEXCOORD3;
+};
+
+gbuffer_vout gbuffer_vs
+(
+	vin IN
+    , uniform float4x4 wv
+    , uniform float4x4 wvp
+)
+{
+	gbuffer_vout OUT;
+    OUT.pos = mul(wvp, IN.pos);
+    OUT.uv0 = IN.uv0;
+    OUT.normal = normalize( mul(wv, float4(IN.normal, 0)) );
+    //OUT.normal = normalize(IN.normal);
+    OUT.vpos = mul(wv, IN.pos).xyz;
+
+    //float vdepth = abs( mul(wv, IN.pos).z );
+    //OUT.depth = vdepth / fcd; 
+	return OUT;
+};
+
+struct gbuffer_fin
+{
+	float2 uv0 : TEXCOORD0;
+	float4 normal : TEXCOORD1;
+	float depth : TEXCOORD2;
+    float3 vpos : TEXCOORD3;
+};
+
+fout4 gbuffer_fs
+(
+    gbuffer_fin IN
+    , uniform sampler2D rt0 : TEXUNIT0
+)
+{
+    fout4 OUT;
+    OUT.color0 = tex2D(rt0, IN.uv0);
+    OUT.color1.rgb = normalize(IN.normal).rgb;
+    OUT.color1.a = IN.depth;
+    OUT.color2 = float4(IN.vpos.xyz, 1.0);
+    OUT.color3 = float4(1.0);
+    return OUT;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// POINT LIGHTS
+///////////////////////////////////////////////////////////////////////////////
+
+struct light_vout
+{
+	float4 pos : POSITION;
+    float4 uv0 : TEXCOORD0;
+	float4 vpos : TEXCOORD1;
+};
+
+light_vout light_vs
+(
+	vin IN
+    , uniform float4x4 v
+    , uniform float4x4 wv
+    , uniform float4x4 wvp
+)
+{
+	light_vout OUT;
+    OUT.pos = mul(wvp, IN.pos);
+    OUT.uv0 = OUT.pos;
+    OUT.vpos = mul(wv, IN.pos);
+	return OUT;
+};
+
+struct light_fin
+{
+	float4 uv0 : TEXCOORD0;
+	float4 vpos : TEXCOORD1;
+};
+
+struct light_material 
+{
+  float3 emissive;
+  float3 ambient;
+  float3 diffuse;
+  float3 specular;
+  float shininess;
+};
+
+struct light_t
+{
+	float4 position; // view-space position
+	float4 orientation; // normalised, view-space orientation
+	float4 color;
+	float4 attenuation;
+	float4 spotlight_range; // x: cos(inner_cone_angle), y: cos(outer_cone_angle), z: inner->outer cone falloff rate, w: unused
+};
+
+fout1 point_light_fs
+(
+    light_fin IN
+    , uniform float4 light_world_position
+    , uniform float4 light_view_position 
+    , uniform float4 light_attenuation 
+    , uniform sampler2D tex_diffuse : TEXUNIT0
+    , uniform sampler2D tex_nd : TEXUNIT1
+    , uniform sampler2D tex_vpos : TEXUNIT2
+    , uniform sampler2D tex_unused : TEXUNIT3
+)
+{
+	// discard;
+    // Transform tex sampler coords into [-1.0, 1.0] range
+    fout1 OUT;
+
+    float4 uv = IN.uv0;
+    uv /= uv.w;
+
+    // Transform tex sampler coords into [0.0, 1.0] range
+    uv.xy *= 0.5;
+    uv.xy += 0.5;
+    //uv.y *= -1.0;
+
+    // Sample texture inputs
+    float4 diffuse_sample = tex2D(tex_diffuse, uv.xy);
+    float4 normal_sample = tex2D(tex_nd, uv.xy);
+    float4 vpos_sample = tex2D(tex_vpos, uv.xy);
+
+    // Get view-space position/normal of g-buffer fragment
+    float3 gvpos = vpos_sample.xyz;
+    float3 lpos = light_view_position.xyz;
+    float3 vnormal = normalize(normal_sample).xyz; // Eye/view space normal
+
+#if 1
+    // Quick attenuation
+    float dist = distance(gvpos, lpos); // Calculate distance between light and g-buffer fragment
+    //if (dist > light_attenuation.x)
+    {
+#if 1
+        OUT.color0 = float4(1,0,0,1);
+        return OUT;
+#else
+        discard;
+#endif
+    }
+    dist /= light_attenuation.x;
+    dist = saturate( 1.0 - saturate(dist) );
+#else
+    float dist = 0.5;
+#endif
+
+#if 1
+    // Diffuse
+    float3 lray = normalize(lpos - gvpos); // Ray from light to surface
+    float ndotl = dot(lray, vnormal);
+    if (ndotl <= 0.0) 
+        discard;
+    float3 diffuse = ndotl;
+#else
+    float4 diffuse = float4(1,0,0,1);
+#endif
+
+#if 0
+    // Specular
+    float3 vray = normalize(-gvpos); // Ray from surface to eye
+    float3 half = normalize(vray + lray);
+    float ndoth = max( dot(vnormal, half), 0.0 );
+    float3 specular = pow(ndoth, 300.0);
+#else
+    float4 specular = float4(0,1,0,1);
+#endif
+
+    // Combined lighting
+    //float4 light = float4(dist * (diffuse + specular), 1.0);
+    //float4 light = float4(diffuse, 1.0);
+    //float4 light = normal_sample;
+    //float4 light = float4(dist);
+    float4 light = dist * float4(diffuse, 1.0);
+
+    // Output
+    OUT.color0 = light;
+    return OUT;
+}
+
+float interpolate(const float x, const float min, const float max)
+{
+	const float PI = 3.141592;
+	float result = 0.0;
+#if 0
+	result = smoothstep(min, max, x);
+#else
+	float x2 = clamp(x, min, max);
+	result = (x2 - min) / (max - min);
+	result = pow(result, 3.0); // NOTE: This yields the 'inner-ring' effect on a flashlight's light cone
+#endif
+	return result;
+}
+
+float falloff(const float distance, const float4 attenuation_info, const float near, const float far)
+{        
+	float attenuation = 0.0f;
+#if 1
+    // Quick attenuation
+    if (distance > attenuation_info.x)
+        discard;
+    attenuation = smoothstep(attenuation_info.x, 0.0, distance);
+    //attenuation = distance / attenuation_info.x;
+#elif 0
+	// Classical attenuation
+	attenuation = attenuation_info.y + (attenuation_info.z * distance) + (attenuation_info.w * pow(distance, 2.0));
+	attenuation = 1.0 / attenuation;
+#elif 0
+	// Custom attenuation
+	//const float NEAR = 50.0;
+	//const float FAR = attenuation_info.x;
+	if (distance < near)
+	{
+		// Classical attenuation
+		attenuation = attenuation_info.y + (attenuation_info.z * distance) + (attenuation_info.w * pow(distance, 2.0));
+		attenuation = 1.0 / attenuation;
+	}
+	else // FAR
+	{
+		// Quick attenuation
+		attenuation = smoothstep(attenuation_info.x, near, distance);
+	}
+#else
+	attenuation = 1.0;
+#endif
+	return attenuation;
+}
+
+float spotlight_intensity(light_t light, float3 vpos)
+{
+	// Determine angular offset from spotlight's central axis
+	float3 vdir = normalize( vpos - light.position.xyz );
+	float3 ldir = normalize(light.orientation.xyz);
+	float cos_cone_angle = dot(vdir, ldir);
+	
+	// Polynomial interpolation between spotlight cone's inner and outer angles
+	// NOTE: This will return 1.0 if the point lies within the spotlight's inner cone,
+	// 0.0 if the point lies outside of the spotlight's outer cone
+	// and falloff polynomically [1.0 -> 0.0] as the position varies from the inner to outer cone
+	float result = 0.0;
+#if 1
+	if (cos_cone_angle >= light.spotlight_range.x)
+		return 1.0;
+	result = interpolate(cos_cone_angle, light.spotlight_range.y, light.spotlight_range.x);
+#else
+	if (cos_cone_angle >= light.spotlight_range.y)
+		result = 1.0;
+#endif
+	return result;
+}
+
+fout1 spot_light_fs
+(
+    light_fin IN
+    , uniform float4 light_position 
+    , uniform float4 light_attenuation 
+    , uniform float4 spotlight_orientation
+    , uniform float4 spotlight_range
+    , uniform sampler2D tex_diffuse : TEXUNIT0
+    , uniform sampler2D tex_nd : TEXUNIT1
+    , uniform sampler2D tex_vpos : TEXUNIT2
+    , uniform sampler2D tex_unused : TEXUNIT3
+)
+{    	
+	// Create light struct
+	light_t light;
+	light.position = light_position;
+	light.attenuation = light_attenuation;
+	light.orientation = spotlight_orientation;
+	light.spotlight_range = spotlight_range;
+	
+    // Transform tex sampler coords into [-1.0, 1.0] range
+    fout1 OUT;
+    float4 uv = IN.uv0;
+    uv /= uv.w;
+
+    // Transform tex sampler coords into [0.0, 1.0] range
+    uv.xy *= 0.5;
+    uv.xy += 0.5;
+    //uv.y *= -1.0;
+
+    // Sample texture inputs
+    float4 diffuse_sample = tex2D(tex_diffuse, uv.xy);
+    float4 normal_sample = tex2D(tex_nd, uv.xy);
+    float4 vpos_sample = tex2D(tex_vpos, uv.xy);
+    
+#if 1
+    OUT.color0 = normal_sample;
+    return OUT;
+#endif
+
+    // Get view-space position/normal of g-buffer fragment
+    float3 gvpos = vpos_sample.xyz;
+    float3 lpos = light_position.xyz;
+    float3 vnormal = normalize(normal_sample).xyz; // View space normal
+    
+    // Determine spotlight intensity
+    float intensity = spotlight_intensity(light, gvpos);
+    if (intensity <= 0.0)
+    {
+#if 0
+    	OUT.color0 = float4(0,0,1,1);
+    	return OUT;
+#else
+		discard;
+#endif
+	}
+
+	// Calculate distance between light and g-buffer fragment
+	float dist = distance(gvpos, light.position.xyz);
+	
+	// Calculate light attenuation
+	float attenuation = falloff(dist, light.attenuation, 50.0, light.attenuation.x);
+	
+#if 1
+    // Diffuse
+    float3 lray = normalize(light.position.xyz - gvpos).xyz; // Ray from light to surface
+    float ndotl = dot(lray, vnormal);
+#if 1
+    if (ndotl <= 0.0) 
+        discard;
+#endif
+    float3 diffuse = ndotl;
+#else
+    float4 diffuse = float4(1,0,0,1);
+#endif
+
+#if 0
+    // Specular
+    float3 vray = normalize(-gvpos); // Ray from surface to eye
+    float3 half = normalize(vray + lray);
+    float ndoth = max( dot(vnormal, half), 0.0 );
+    float3 specular = pow(ndoth, 300.0);
+#else
+    float4 specular = float4(0,1,0,1);
+#endif
+
+    // Combined lighting output
+    OUT.color0 = attenuation * intensity * float4(diffuse, 1.0);;
+    return OUT;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// PASSTHRU
+///////////////////////////////////////////////////////////////////////////////
+
+struct passthru_vin 
+{
+	float4 pos : POSITION;
+    float4 normal : NORMAL;
+    float2 uv0 : TEXCOORD0;
+};
+
+struct passthru_vout
+{
+	float4 pos : POSITION;
+    float2 uv0 : TEXCOORD0;
+    float3 vpos : TEXCOORD1;
+};
+
+passthru_vout passthru_vs
+(
+	passthru_vin IN
+    , uniform float4x4 wvp
+)
+{
+	passthru_vout OUT;
+    OUT.pos = mul(wvp, IN.pos);
+    OUT.uv0 = IN.uv0;
+	return OUT;
+};
+
+struct passthru_fin 
+{
+	float2 uv0 : TEXCOORD0;
+    float3 vpos : TEXCOORD1;
+};
+
+fout1 passthru_fs
+(
+    passthru_fin IN
+    , uniform sampler2D tex_diffuse : TEXUNIT0
+    , uniform sampler2D tex_nd : TEXUNIT1
+    , uniform sampler2D tex_vpos : TEXUNIT2
+    , uniform sampler2D tex_unused : TEXUNIT3
+)
+{
+    fout1 OUT;
+    OUT.color0.rgb = tex2D(tex_nd, IN.uv0).a;
+    OUT.color0.a = 1.0; 
+    return OUT;
+}
+
+fout1 passthru_with_lights_fs
+(
+    passthru_fin IN
+    , uniform sampler2D tex_diffuse : TEXUNIT0
+    , uniform sampler2D tex_light : TEXUNIT1
+)
+{
+    fout1 OUT;
+    OUT.color0 = tex2D(tex_diffuse, IN.uv0);
+    OUT.color0 = tex2D(tex_light, IN.uv0); 
+    return OUT;
+}

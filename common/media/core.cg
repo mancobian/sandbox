@@ -1,0 +1,37 @@
+///////////////////////////////////////////////////////////////////////////////
+// TYPES
+///////////////////////////////////////////////////////////////////////////////
+
+struct vin
+{
+    float4 pos : POSITION;
+    float3 normal : NORMAL;
+    float2 uv0 : TEXCOORD0;
+};
+
+struct fout1
+{
+	float4 color0 : COLOR0;
+};
+
+struct fout2
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+};
+
+struct fout3
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+	float4 color2 : COLOR2;
+};
+
+struct fout4
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+	float4 color2 : COLOR2;
+	float4 color3 : COLOR3;
+};
+

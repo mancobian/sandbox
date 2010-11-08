@@ -1,0 +1,1183 @@
+
+material Shipping/loaddoor.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0.478431 0.478431 0.478431 1 20
+
+			texture_unit
+			{
+				texture_alias loaddoor
+				texture shipping_loadingdoor.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/shelves.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+			cull_software front
+
+			texture_unit
+			{
+				texture_alias shelves
+				texture shipping_shelves.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/blockwall.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0.478431 0.478431 0.478431 1 20
+
+			texture_unit
+			{
+				texture_alias blockwall
+				texture shipping_walls.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/ceiling.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0.478431 0.478431 0.478431 1 20
+
+			texture_unit
+			{
+				texture_alias ceiling
+				texture shipping_ceiling.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/midwall.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0.478431 0.478431 0.478431 1 20
+
+			texture_unit
+			{
+				texture_alias midwall
+				texture shipping_midwall.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/bulkhead.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias bulkhead
+				texture shipping_bulkhead.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/stucco.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture_alias stucco
+				texture shipping_stucco.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/column.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+			cull_hardware none
+
+			texture_unit
+			{
+				texture_alias column
+				texture shipping_column.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/security.glass
+{
+	receive_shadows off
+	technique
+	{
+		pass
+		{
+			specular 1 1 1 1 10
+			scene_blend alpha_blend
+			alpha_rejection less_equal 255
+			depth_write off
+
+			texture_unit
+			{
+				texture_alias window
+				texture shipping_glass.png
+				rotate -45.8366
+			}
+
+			texture_unit
+			{
+				texture_alias reflection
+				texture shipping_reflection_grey.jpg
+				tex_address_mode mirror
+				colour_op_ex blend_texture_alpha src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				env_map planar
+			}
+		}
+
+	}
+
+}
+
+material Shipping/concrete.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias concrete
+				texture shipping_concrete.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/concreteslab.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias concreteslab
+				texture shipping_concreteslab.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/stairs.noco
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			alpha_rejection equal 255
+			cull_hardware none
+
+			texture_unit
+			{
+				texture_alias base
+				texture shipping_stairs.png
+				max_anisotropy 20
+				alpha_op_ex modulate_x2 src_texture src_current
+			}
+		}
+
+	}
+
+}
+
+material Shipping/ceilingtile.dirt
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias ceilingtile
+				texture shipping_ceilingtile.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/officewalls.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias officewalls
+				texture shipping_office_walls.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/exterior.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias exterior
+				texture shipping_exterior.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/concretewall.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias concretewall
+				texture shipping_concrete_wall.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/lights.glass
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			fog_override true none
+
+			texture_unit
+			{
+				texture_alias lights
+				texture shipping_lights.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/blinds.noco
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			alpha_rejection equal 255
+			cull_hardware none
+
+			texture_unit
+			{
+				texture_alias base
+				texture shipping_blinds.tga
+				max_anisotropy 20
+				alpha_op_ex modulate_x2 src_texture src_current
+			}
+		}
+
+	}
+
+}
+
+material Shipping/box.wood_b
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias box
+				texture shipping_box.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/column.noco
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			cull_hardware none
+			fog_override true none
+
+			texture_unit
+			{
+				texture_alias column
+				texture shipping_column.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/wallclock.glass
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias wallclock
+				texture shipping_wallclock.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/secondhand.noco
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.941177 0.941177 0.941177 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 20
+			scene_blend alpha_blend
+			alpha_rejection greater_equal 166
+
+			texture_unit
+			{
+				texture_alias secondhand
+				texture shipping_secondhand.tga
+				alpha_op_ex modulate_x2 src_texture src_current
+				rotate_anim 0.015
+			}
+		}
+
+	}
+
+}
+
+material Shipping/singledoor.metal_c
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias singledoor
+				texture shipping_singledoor.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/industrialfan.metal_c
+{
+	technique
+	{
+		pass
+		{
+			diffuse 0.992157 0.992157 0.992157 1
+			specular 0 0 0 1 20
+			cull_hardware none
+
+			texture_unit
+			{
+				texture_alias industrialfan
+				texture shipping_industrialfan.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/fanblade.noco
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+			scene_blend alpha_blend
+			alpha_rejection greater_equal 159
+			cull_hardware none
+
+			texture_unit
+			{
+				texture_alias fanblade
+				texture shipping_fanblade.tga
+				rotate_anim 0.7
+			}
+		}
+
+	}
+
+}
+
+material Shipping/grate.metal_a
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+			scene_blend alpha_blend
+			alpha_rejection greater_equal 200
+			cull_hardware none
+			shading phong
+
+			texture_unit
+			{
+				texture_alias grate
+				texture shipping_boxfangrate.tga
+				alpha_op_ex modulate_x2 src_texture src_current
+				scale 0.0999999 0.1
+			}
+		}
+
+	}
+
+}
+
+material Shipping/sky.noco
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			fog_override true none
+
+			texture_unit
+			{
+				texture_alias base
+				texture shipping_sky.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/trailer.metal_b
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias trailer
+				texture shipping_semi_trailer.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/trailer.dirt
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias trailer
+				texture shipping_semi_trailer.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/animated_light_1.noco
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend add
+			alpha_rejection not_equal 0
+			depth_write off
+			cull_hardware none
+			fog_override true none
+
+			texture_unit
+			{
+				texture_alias lightrow
+				anim_texture shipping_lightrow_on.jpg shipping_lightrow_off.jpg shipping_lightrow_off.jpg 2
+				colour_op_ex modulate_x2 src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+			}
+		}
+
+	}
+
+}
+
+material Shipping/sodamachine.metal_b
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias sodamachine_new
+				texture shipping_soda.tga
+			}
+
+			texture_unit
+			{
+				texture_alias sodamachine_reflection
+				texture shipping_reflection_grey.jpg
+				colour_op_ex blend_current_alpha src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				rotate -85.9437
+				env_map cubic_reflection
+			}
+		}
+
+	}
+
+}
+
+material Shipping/breaktable.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias breaktable
+				texture shipping_breaktable.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/forklift.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias forklift
+				texture shipping_forklift.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/trashcan.metal_b
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias trashcan
+				texture shipping_trashcan.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/cubicle.wood_b
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				texture_alias cubicle
+				texture shipping_cubicle.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/objective_sign.metal_c
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias diffuse
+				texture shipping_exit_sign.jpg
+				alpha_op_ex modulate src_manual src_texture 1
+			}
+
+			texture_unit
+			{
+				texture_alias illumination
+				texture shipping_exit_sign_glow.jpg
+				tex_coord_set 1
+				colour_op_ex add src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				alpha_op_ex modulate src_manual src_texture 1
+			}
+		}
+
+	}
+
+}
+
+material Shipping/objective_sign.noco
+{
+	lod_distances 1000
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend add
+			alpha_rejection greater_equal 0
+			depth_write off
+			fog_override true none
+
+			texture_unit
+			{
+				texture_alias diffuse
+				texture shipping_exit_sign_glow.jpg
+				tex_coord_set 1
+				alpha_op_ex modulate src_manual src_texture 1
+			}
+		}
+
+	}
+
+	technique
+	{
+		lod_index 1
+	}
+
+}
+
+material Shipping/tree.noco
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture_alias tree
+				texture shipping_treeline.tga
+			}
+		}
+
+	}
+
+}
+
+material Shipping/tower.noco
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture_alias cubicle
+				texture shipping_env_watertower.png
+			}
+		}
+
+	}
+
+}
+
+material Shipping/parkinglotlight.metal_b
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias parkinglotlight
+				texture shipping_parkinglotlight.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/bigbox.wood_b
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias bigbox
+				texture shipping_bigcrate.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/roof.noco
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias roof
+				texture shipping_gravel_roof.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/floor.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias floor
+				texture shipping_floor.jpg
+			}
+
+			texture_unit
+			{
+				texture_alias details
+				texture shipping_floor_lines.jpg
+				tex_coord_set 1
+				filtering point point none
+				colour_op_ex add src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+			}
+		}
+
+	}
+
+}
+
+material Shipping/parkinglot.dirt
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias parkinglot
+				texture shipping_asphalt.jpg
+			}
+
+			texture_unit
+			{
+				texture_alias details
+				texture shipping_parkinglot_details.jpg
+				tex_coord_set 1
+				filtering point point none
+				colour_op_ex add src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+			}
+		}
+
+	}
+
+}
+
+material Shipping/steps.stone_c
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias steps
+				texture shipping_steps.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/chrome.stone_c
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias reflection
+				texture shipping_reflection_black.jpg
+				colour_op_ex modulate_x2 src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				env_map spherical
+			}
+		}
+
+	}
+
+}
+
+material Shipping/basement_floor.stone_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias basement_floor
+				texture shipping_floor.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/elevator.metal_c
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.901961 0.901961 0.901961 1
+			diffuse 0.901961 0.901961 0.901961 1
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias elevator
+				texture shipping_elevator.tga
+			}
+
+			texture_unit
+			{
+				texture_alias reflection
+				texture shipping_reflection_grey.jpg
+				colour_op_ex blend_current_alpha src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				scale 3 1.5
+				env_map planar
+			}
+		}
+
+	}
+
+}
+
+material Shipping/carpet.dirt
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 20
+
+			texture_unit
+			{
+				texture_alias carpet
+				texture shipping_carpet.jpg
+			}
+		}
+
+	}
+
+}
+
+material Shipping/elevator_glow.metal_c
+{
+	lod_distances 400
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				texture_alias elevator
+				texture shipping_elevator.tga
+			}
+
+			texture_unit
+			{
+				texture_alias reflection
+				texture shipping_reflection_grey.jpg
+				colour_op_ex blend_current_alpha src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				scale 3 1.5
+				env_map planar
+			}
+		}
+
+	}
+
+	technique
+	{
+		lod_index 1
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				texture_alias elevator
+				texture shipping_elevator_dark.tga
+			}
+
+			texture_unit
+			{
+				texture_alias reflection
+				texture shipping_reflection_grey.jpg
+				colour_op_ex blend_current_alpha src_texture src_current
+				colour_op_multipass_fallback dest_colour zero
+				scale 3 1.5
+				env_map planar
+			}
+		}
+
+	}
+
+}
+
+material Shipping/scissorlift.metal_c
+{
+	technique
+	{
+		pass
+		{
+			specular 0.235294 0.235294 0.235294 1 20
+
+			texture_unit
+			{
+				texture_alias scissorlift
+				texture shipping_scissorlift.jpg
+			}
+		}
+
+	}
+
+}

@@ -1,0 +1,28 @@
+//CG Pixel Shader ps_2_0
+fragment_program vertexTextureBlend cg
+{
+	source vertexTextureBlend3_ps.source
+	profiles ps_2_0 arbfp1 fp20
+	entry_point main
+
+	default_params
+	{
+		param_named scale_tex1 float 1
+		param_named scale_tex2 float 1
+		param_named scale_tex3 float 1
+	}
+}
+
+//CG Vertex Shader vs_2_0
+vertex_program vertexTextureBlendVS cg
+{
+	source vertexTextureBlend3_vs.source
+	profiles vs_2_0 arbvp1
+	entry_point main
+
+	default_params
+	{
+		param_named scale float 1
+		param_named_auto worldViewProj worldViewProj_matrix
+	}
+}

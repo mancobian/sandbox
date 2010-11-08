@@ -1,0 +1,103 @@
+///////////////////////////////////////////////////////////////////////////////
+// INCLUDE
+///////////////////////////////////////////////////////////////////////////////
+
+#include "core.cg"
+
+///////////////////////////////////////////////////////////////////////////////
+// GENERAL DECLARATIONS
+///////////////////////////////////////////////////////////////////////////////
+
+struct vin
+{
+    float4 pos : POSITION;
+    float3 normal : NORMAL;
+    float2 uv0 : TEXCOORD0;
+};
+
+struct fout1
+{
+	float4 color0 : COLOR0;
+};
+
+struct fout2
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+};
+
+struct fout3
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+	float4 color2 : COLOR2;
+};
+
+struct fout4
+{
+	float4 color0 : COLOR0;
+	float4 color1 : COLOR1;
+	float4 color2 : COLOR2;
+	float4 color3 : COLOR3;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// G-BUFFER
+///////////////////////////////////////////////////////////////////////////////
+
+struct gbuffer_vout
+{
+	float4 pos : POSITION;
+    float2 uv0 : TEXCOORD0;
+    float4 normal : TEXCOORD1;
+    float depth : TEXCOORD2;
+    float3 vpos : TEXCOORD3;
+};
+
+gbuffer_vout gbuffer_vs
+(
+	vin IN
+    , uniform float4x4 wv
+    , uniform float4x4 wvp
+    , uniform float ncd
+    , uniform float fcd
+)
+{
+	gbuffer_vout OUT;
+    OUT.pos = mul(wvp, IN.pos);
+    OUT.uv0 = IN.uv0;
+    OUT.normal = normalize( mul(wv, float4(IN.normal, 0)) );
+    //OUT.normal = normalize(IN.normal);
+    OUT.vpos = mul(wv, IN.pos).xyz;
+
+	const float DEPTH_RANGE_ADJUST = 5.0;
+    float range = abs(fcd / DEPTH_RANGE_ADJUST) - abs(ncd);
+    OUT.depth = 1.0 - abs(OUT.vpos.z) / range; 
+	return OUT;
+};
+
+struct gbuffer_fin
+{
+	float2 uv0 : TEXCOORD0;
+	float4 normal : TEXCOORD1;
+	float depth : TEXCOORD2;
+    float3 vpos : TEXCOORD3;
+};
+
+fout4 gbuffer_fs
+(
+    gbuffer_fin IN
+    , uniform sampler2D rt0 : register(s0)
+)
+{
+    fout4 OUT;
+    // OUT.color0.rgb = IN.depth;
+    // OUT.color0.a = 1.0;
+    OUT.color0 = tex2D(rt0, IN.uv0);
+    OUT.color1.rgb = normalize(IN.normal).rgb;
+    OUT.color1.a = IN.depth;
+    OUT.color2 = float4(IN.vpos.xyz, 1.0);
+    OUT.color3 = float4(1.0);
+    return OUT;
+};
+

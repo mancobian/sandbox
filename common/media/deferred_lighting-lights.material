@@ -1,0 +1,207 @@
+///////////////////////////////////////////////////////////////////////////////
+// POINT LIGHTS
+///////////////////////////////////////////////////////////////////////////////
+
+vertex_program tsdc/program/light_vp cg
+{
+	source deferred_lighting-lights.cg
+	entry_point light_vs
+	profiles vs_2_0 arbvp1
+
+    default_params
+    {
+        param_named_auto wv worldview_matrix
+        param_named_auto wvp worldviewproj_matrix
+    }
+}
+
+fragment_program tsdc/program/point_light_fp cg
+{
+	source deferred_lighting-lights.cg
+	entry_point point_light_fs
+	profiles ps_2_0 arbfp1
+
+    default_params
+    {
+        param_named_auto light_position custom 0
+        param_named_auto light_attenuation custom 1
+    }
+}
+
+fragment_program tsdc/program/spot_light_fp cg
+{
+	source deferred_lighting-lights.cg
+	entry_point spot_light_fs
+	profiles ps_2_0 arbfp1
+
+    default_params
+    {
+        param_named_auto light_position custom 0
+        param_named_auto light_attenuation custom 1
+        param_named_auto spotlight_orientation custom 2
+        param_named_auto spotlight_range custom 3
+    }
+}
+
+material tsdc/material/lights/point
+{
+	technique tsdc/technique/frontface
+	{
+        scheme tsdc/scheme/frontface
+
+		pass tsdc/pass/lights
+		{
+            cull_hardware clockwise
+            cull_software back
+            depth_check on
+            depth_func less_equal
+            depth_write off
+            scene_blend add
+
+			vertex_program_ref tsdc/program/light_vp 
+            {
+            }
+			
+			fragment_program_ref tsdc/program/point_light_fp 
+            {
+            }
+
+            texture_unit diffuse
+            {
+            }
+
+            texture_unit nd
+            {
+            }
+
+            texture_unit vpos
+            {
+            }
+
+            texture_unit unused
+            {
+            }
+        }
+    }
+    
+	technique tsdc/technique/backface
+	{
+        scheme tsdc/scheme/backface
+
+		pass tsdc/pass/lights
+		{
+            cull_hardware anticlockwise
+            cull_software front
+            depth_check on
+            depth_func greater_equal
+            depth_write off
+            scene_blend add
+
+			vertex_program_ref tsdc/program/light_vp 
+            {
+            }
+			
+			fragment_program_ref tsdc/program/point_light_fp 
+            {
+            }
+
+            texture_unit diffuse
+            {
+            }
+
+            texture_unit nd
+            {
+            }
+
+            texture_unit vpos
+            {
+            }
+
+            texture_unit unused
+            {
+            }
+        }
+    }
+}
+
+material tsdc/material/lights/spotlight
+{
+	technique tsdc/technique/frontface
+	{
+        scheme tsdc/scheme/frontface
+
+		pass tsdc/pass/lights
+		{
+            cull_hardware clockwise
+            cull_software back
+            depth_check on
+            depth_func less
+            depth_write off
+            scene_blend add
+
+			vertex_program_ref tsdc/program/light_vp 
+            {
+            }
+			
+			fragment_program_ref tsdc/program/spot_light_fp 
+            {
+            }
+
+            texture_unit diffuse
+            {
+            }
+
+            texture_unit nd
+            {
+            }
+
+            texture_unit vpos
+            {
+            }
+
+            texture_unit unused
+            {
+            }
+        }
+    }
+    
+	technique tsdc/technique/backface
+	{
+        scheme tsdc/scheme/backface
+
+		pass tsdc/pass/lights
+		{
+            cull_hardware anticlockwise
+            cull_software front
+            depth_check on
+            depth_func greater
+            depth_write off
+            scene_blend add
+
+			vertex_program_ref tsdc/program/light_vp 
+            {
+            }
+			
+			fragment_program_ref tsdc/program/spot_light_fp 
+            {
+            }
+
+            texture_unit diffuse
+            {
+            }
+
+            texture_unit nd
+            {
+            }
+
+            texture_unit vpos
+            {
+            }
+
+            texture_unit unused
+            {
+            }
+        }
+    }
+}
+

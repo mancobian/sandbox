@@ -1,0 +1,53 @@
+<oe_scene>
+    <sceneManager type="0" />
+    <bkgcolor r="0.211765" g="0.211765" b="0.211765" />
+    <lightColor r="0.5" g="0.5" b="0.5" />
+    <shadowTechnique type="0" tex_size="512" tex_count="1">
+        <color r="0.458824" g="0.458824" b="0.458824" />
+    </shadowTechnique>
+    <lights>
+        <light name="Omni01" type="spot" on="true" CastShadows="yes" intensity="1">
+            <position x="550.797058" y="270.23547" z="126" />
+            <rotation x="0" y="0" z="-0" w="-1" />
+            <scale x="1" y="1" z="1" />
+            <color r="1" g="1" b="1" />
+            <specular r="1" g="1" b="1" />
+            <attenuation range="100" constant="20" linear="10" quadratic="2" />
+        </light>
+    </lights>
+    <entities>
+        <entity name="targeting.static" hidden="false" filename="targeting.static.mesh" CastShadows="no" ReceiveShadows="no">
+            <position x="0" y="0" z="-0" />
+            <rotation x="0" y="0" z="-0" w="-1" />
+            <scale x="1" y="1" z="1" />
+        </entity>
+        <entity name="prop_bug_Green" hidden="false" filename="prop_bug_Green.mesh" CastShadows="yes" ReceiveShadows="yes">
+            <position x="205.33215" y="0" z="-1.0116703e-005" />
+            <rotation x="0" y="0" z="-0" w="-1" />
+            <scale x="1" y="1" z="1" />
+        </entity>
+        <entity name="prop_bug_Red" hidden="false" filename="prop_bug_Red.mesh" CastShadows="yes" ReceiveShadows="yes">
+            <position x="3.8118362" y="0" z="-1.0116703e-005" />
+            <rotation x="0" y="0" z="-0" w="-1" />
+            <scale x="1" y="1" z="1" />
+        </entity>
+        <entity name="prop_bug_Blue" hidden="false" filename="prop_bug_Blue.mesh" CastShadows="yes" ReceiveShadows="yes">
+            <position x="410.36389" y="0" z="-1.0116703e-005" />
+            <rotation x="0" y="0" z="-0" w="-1" />
+            <scale x="1" y="1" z="1" />
+        </entity>
+        <entity name="prop_bug_Reflection" hidden="false" filename="prop_bug_Reflection.mesh" CastShadows="yes" ReceiveShadows="yes">
+            <position x="-185.23297" y="0" z="-1.0116703e-005" />
+            <rotation x="0" y="0" z="-0" w="-1" />
+            <scale x="1" y="1" z="1" />
+        </entity>
+        <entity name="prop_bug_Glass" hidden="false" filename="prop_bug_Glass.mesh" CastShadows="yes" ReceiveShadows="yes">
+            <position x="-380.2504" y="0" z="-1.0116703e-005" />
+            <rotation x="0" y="0" z="-0" w="-1" />
+            <scale x="1" y="1" z="1" />
+        </entity>
+    </entities>
+    <locations auto="no">
+        <subDir path="/" />
+    </locations>
+</oe_scene>
